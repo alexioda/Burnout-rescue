@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Burnout Rescue Workbook</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary: #006D77; /* Deep Ocean Teal */
+            --secondary: #83C5BE; /* Soft Sage */
+            --bg-color: #F0F6F6; /* Pale Blue/Grey */
+            --text-color: #2F3E46; /* Dark Slate */
+            --accent: #E29578; /* Muted Terra Cotta */
+            --font-heading: 'Georgia', 'Times New Roman', serif;
+            --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #dbe7e7;
+            font-family: var(--font-body);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- UI ELEMENTS --- */
+        .web-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        /* --- PAGE LAYOUT --- */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: relative;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-family: var(--font-heading); color: var(--primary); }
+        h1 { font-size: 32pt; margin-bottom: 0.2em; line-height: 1.1; }
+        h2 { font-size: 18pt; margin-top: 1em; border-bottom: 2px solid var(--secondary); padding-bottom: 5px; }
+        h3 { font-size: 14pt; margin-top: 1.5em; color: #555; }
+        p { font-size: 11pt; line-height: 1.6; margin-bottom: 1em; }
+        
+        .subtitle {
+            font-family: var(--font-body);
+            font-size: 14pt;
+            color: var(--accent);
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- COMPONENTS --- */
+        .logo-container { text-align: center; margin-bottom: 40px; margin-top: 60px; }
+
+        .permission-slip {
+            border: 2px dashed var(--secondary);
+            background-color: #fcfcfc;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .permission-slip::before {
+            content: "OFFICIAL PERMISSION";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 10px;
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+        }
+
+        .stat-box {
+            background-color: #eff6f6;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+            padding: 15px;
+            font-family: var(--font-body);
+            font-size: 11pt;
+            resize: none;
+            min-height: 100px;
+            border-radius: 4px;
+        }
+        
+        input[type="text"] {
+            border: none;
+            border-bottom: 1px solid #999;
+            background: transparent;
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 12pt;
+            padding: 5px;
+        }
+
+        .check-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .check-table td { padding: 10px; border-bottom: 1px solid #eee; }
+
+        /* --- MOBILE & PRINT --- */
+        @media screen and (max-width: 820px) {
+            .page { width: 100%; margin: 0; padding: 20px; box-shadow: none; border-bottom: 10px solid #dbe7e7; min-height: auto; }
+            .web-controls { top: auto; bottom: 20px; right: 20px; }
+            h1 { font-size: 24pt; }
+        }
+
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white; }
+            .page { margin: 0; box-shadow: none; width: 210mm; height: 297mm; page-break-after: always; padding: 20mm; }
+            .web-controls { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="web-controls">
+        <button class="btn" onclick="window.print()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7"></path>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2-2v5a2 2 0 0 1-2 2h-2"></path>
+                <path d="M6 14h12v8H6z"></path>
+            </svg>
+            Save as PDF
+        </button>
+        <a href="index.html" class="btn btn-secondary">
+            ⬅ Back to Canvas
+        </a>
+    </div>
+
+    <div class="page" style="display: flex; flex-direction: column; justify-content: center;">
+        <div class="logo-container">
+             <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto; display: block;">
+                <circle cx="50" cy="50" r="45" stroke="#006D77" stroke-width="2" fill="none" opacity="0.3"/>
+                <path d="M30 60 Q 50 80 70 60" stroke="#006D77" stroke-width="2" fill="none" />
+                <circle cx="50" cy="40" r="5" fill="#E29578" />
+            </svg>
+            <h2 style="font-size: 10pt; border: none; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-top: 20px;">Conscious Growth Coaching</h2>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <h1 style="font-size: 36pt; color: var(--primary);">The Burnout<br>Rescue Workbook</h1>
+            <div class="subtitle" style="margin-top: 20px;">From Depletion to Restoration</div>
+            
+            <div style="margin-top: 80px; max-width: 80%; margin-left: auto; margin-right: auto;">
+                <p style="font-style: italic; color: #666; font-size: 1.1em;">"You cannot pour from an empty cup.<br>It is time to let the water refill."</p>
+                <div style="width: 50px; height: 3px; background: var(--accent); margin: 30px auto;"></div>
+            </div>
+            
+            <div style="margin-top: 80px;">
+                <p><strong>Private Workbook For:</strong></p>
+                <input type="text" placeholder="Your Name" style="text-align: center; width: 60%; color: var(--primary); font-weight: bold;">
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <h2>1. The Reality Check</h2>
+        <p>Burnout is not "weakness." It is a physiological state of depletion. Before we can heal, we must stop gaslighting ourselves about the severity of the situation.</p>
+
+        <div class="stat-box">
+            <h3>📊 You Are Not Alone</h3>
+            <p><strong>It's not just you.</strong> According to the APA (2023), 57% of workers report negative health impacts from work-related stress.</p>
+            <ul style="margin-bottom: 0;">
+                <li><strong>Gender Gap:</strong> Women report burnout at rates 4-5% higher than men.</li>
+                <li><strong>Systemic Wear:</strong> Minority groups often report lower *perceived* stress but higher *physiological* markers due to the pressure to "appear strong."</li>
+            </ul>
+        </div>
+
+        <h3>Self-Diagnosis: Stress vs. Burnout</h3>
+        <p><strong>Stress</strong> is "too much" (too many pressures). <strong>Burnout</strong> is "not enough" (not enough emotion, motivation, or hope).</p>
+        
+        <table class="check-table" style="background: #fff; border: 1px solid #eee;">
+            <tr style="background: #f9f9f9;">
+                <th style="text-align: left; padding: 10px;">Signs of Stress</th>
+                <th style="text-align: left; padding: 10px;">Signs of Burnout</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox"> Over-reactive emotions</td>
+                <td><input type="checkbox"> Blunted / Numb emotions</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"> Urgency & Hyperactivity</td>
+                <td><input type="checkbox"> Helplessness & Apathy</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"> Loss of energy</td>
+                <td><input type="checkbox"> Loss of ideals & hope</td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 30px;">
+            <p><strong>The "Battery" Check:</strong> If 100% is fully charged and 0% is collapsed, where are you today?</p>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span>0%</span>
+                <input type="range" min="0" max="100" value="30" style="flex-grow: 1;">
+                <span>100%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <h2>2. The Permission Slip</h2>
+        <p>In a world obsessed with productivity, resting feels like a crime. To heal from burnout, you must override the guilt. You need a contract with yourself that prioritizes safety over output.</p>
+
+        <div class="permission-slip">
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--primary);">PERMISSION TO PAUSE</h3>
+            <p>I, __________________________, hereby acknowledge that my body is currently in a state of debt.</p>
+            <p>I understand that I cannot "hack" my way out of exhaustion.</p>
+            <p><strong>For the next [Choose duration: 7/14/30] days, I give myself permission to:</strong></p>
+            <ul style="line-height: 1.8;">
+                <li>Disappoint people who demand too much of me.</li>
+                <li>Say "No" without offering a lengthy explanation.</li>
+                <li>Rest without calling it "lazy."</li>
+                <li>Do the bare minimum required to survive, not thrive.</li>
+            </ul>
+            <p style="margin-top: 20px;">My worth is not defined by my productivity. My goal right now is not to grow, but to heal.</p>
+            
+            <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+                <div style="width: 45%; border-top: 1px solid #333; padding-top: 5px; font-size: 0.9em;">Signed</div>
+                <div style="width: 45%; border-top: 1px solid #333; padding-top: 5px; font-size: 0.9em;">Date</div>
+            </div>
+        </div>
+
+        <p><strong>The Guilt Release:</strong> What is one thing you feel guilty about not doing, that you can realistically drop for 1 week?</p>
+        <textarea placeholder="e.g., Cooking elaborate meals, answering emails after 6pm, volunteering..."></textarea>
+    </div>
+
+    <div class="page">
+        <h2>3. Your Nervous System</h2>
+        <p>You aren't "broken." You are in <strong>Dorsal Shutdown</strong>. This is your body's emergency brake.</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <svg width="400" height="300" viewBox="0 0 400 300">
+                <line x1="150" y1="20" x2="150" y2="280" stroke="#ccc" stroke-width="4" stroke-linecap="round"/>
+                <line x1="250" y1="20" x2="250" y2="280" stroke="#ccc" stroke-width="4" stroke-linecap="round"/>
+                <line x1="150" y1="50" x2="250" y2="50" stroke="#ccc" stroke-width="4"/>
+                <line x1="150" y1="150" x2="250" y2="150" stroke="#ccc" stroke-width="4"/>
+                <line x1="150" y1="250" x2="250" y2="250" stroke="#ccc" stroke-width="4"/>
+                <rect x="50" y="20" width="300" height="60" rx="10" fill="#83C5BE" opacity="0.3" />
+                <text x="200" y="55" text-anchor="middle" font-weight="bold" fill="#006D77">VENTRAL VAGAL (Safety)</text>
+
+                <rect x="50" y="110" width="300" height="60" rx="10" fill="#E29578" opacity="0.3" />
+                <text x="200" y="145" text-anchor="middle" font-weight="bold" fill="#A85740">SYMPATHETIC (Stress)</text>
+
+                <rect x="50" y="200" width="300" height="80" rx="10" fill="#333" opacity="0.1" />
+                <text x="200" y="235" text-anchor="middle" font-weight="bold" fill="#333">DORSAL VAGAL (Burnout)</text>
+                <circle cx="90" cy="240" r="15" fill="#E63946" />
+                <text x="90" y="245" text-anchor="middle" fill="white" font-weight="bold" font-size="12">YOU</text>
+            </svg>
+        </div>
+
+        <div class="stat-box" style="border-color: #555; background: #f0f0f0;">
+            <h3>🛑 The Trap</h3>
+            <p>When we feel the "Shutdown" (bottom), we often try to force ourselves back to the top with caffeine or anxiety. <strong>This fails.</strong> To get out of the basement, you must move slowly. You need <strong>safety</strong>, not speed.</p>
+        </div>
+    </div>
+
+    <div class="page">
+        <h2>4. The Shelter (Lobster Phase)</h2>
+        <p>When a lobster grows, it must shed its shell. During this time, it is soft and vulnerable. It does not hunt. <strong>It hides under a rock.</strong> You are currently "Soft-Shelled." You need a rock.</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <svg width="100" height="80" viewBox="0 0 100 80" style="margin: 0 auto;">
+                <path d="M10 80 Q 50 10 90 80" fill="#333" />
+                <circle cx="50" cy="70" r="8" fill="#E29578" /> 
+            </svg>
+            <p style="font-size: 0.9em; font-style: italic;">Hiding is a biological necessity for growth.</p>
+        </div>
+
+        <h3>Building Your Rock (Boundaries)</h3>
+        <p>To recover, you must stop the leaks draining your battery. Identify 3 specific things you will say <strong>NO</strong> to this week.</p>
+
+        <div style="margin-top: 20px;">
+            <p><strong>1. The Professional "No"</strong> (Work/Tasks)</p>
+            <input type="text" placeholder="e.g., I will not check Slack after 6pm.">
+        </div>
+        <div style="margin-top: 20px;">
+            <p><strong>2. The Social "No"</strong> (Obligations/Events)</p>
+            <input type="text" placeholder="e.g., I will skip the happy hour this Friday.">
+        </div>
+        <div style="margin-top: 20px;">
+            <p><strong>3. The Internal "No"</strong> (Self-Talk)</p>
+            <input type="text" placeholder="e.g., I will stop scrolling news in bed.">
+        </div>
+    </div>
+
+    <div class="page">
+        <h2>5. The Restoration Plan</h2>
+        <p>Recovery doesn't happen in big leaps. It happens in "Micro-Doses." Select 3 tiny actions that require almost zero energy but provide sensory comfort.</p>
+
+        <table class="check-table">
+            <tr><td><input type="checkbox"> <strong>Nature:</strong> Step outside for 2 minutes and look at the sky.</td></tr>
+            <tr><td><input type="checkbox"> <strong>Water:</strong> Drink a glass of water slowly (feel the temperature).</td></tr>
+            <tr><td><input type="checkbox"> <strong>Tech-Free:</strong> Leave phone in the other room for 20 mins.</td></tr>
+            <tr><td><input type="checkbox"> <strong>Touch:</strong> Wrap in a weighted blanket or heavy hoodie.</td></tr>
+            <tr><td><input type="checkbox"> <strong>Sound:</strong> Listen to brown noise or rain sounds.</td></tr>
+        </table>
+
+        <h3>Your Commitment</h3>
+        <p>I commit to doing <strong>one</strong> of these things today. Just one.</p>
+        
+        <div style="margin-top: 50px; text-align: center; border-top: 1px dashed #ccc; padding-top: 30px;">
+            <p style="font-weight: bold; color: var(--primary);">Next Step</p>
+            <p>If you feel stuck in the "Shutdown" phase for a prolonged period, consider using the <strong style="color:var(--accent)">Adaptiv App</strong>. Select the "Restore" module for guided audio.</p>
+        </div>
+    </div>
+
+</body>
+</html>
