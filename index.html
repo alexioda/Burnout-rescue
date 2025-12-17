@@ -21,22 +21,23 @@
             display: flex;
             justify-content: center;
             color: var(--text);
-            padding-bottom: 100px; /* Space for floating buttons */
+            padding-bottom: 120px; /* Extra space at bottom for buttons */
         }
 
-        /* --- WEB CONTROLS (Moved to Bottom to avoid blocking Header) --- */
+        /* --- WEB CONTROLS (FIXED: BOTTOM RIGHT) --- */
         .web-controls {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px; /* Anchored to bottom */
+            right: 30px;  /* Anchored to right */
+            top: auto;    /* Prevents top alignment */
             display: flex;
-            gap: 10px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
+            gap: 15px;
+            z-index: 9999;
+            background: white;
             padding: 10px;
             border-radius: 50px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border: 1px solid #ccc;
         }
 
         .btn {
@@ -55,7 +56,7 @@
             transition: transform 0.2s;
         }
         .btn:hover { transform: translateY(-2px); }
-        .btn-secondary { background-color: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-secondary { background-color: #f0f0f0; color: var(--primary); border: 2px solid var(--primary); }
 
         /* --- CANVAS SHEET --- */
         .canvas-sheet {
@@ -71,34 +72,24 @@
             gap: 30px;
         }
 
-        /* --- HEADER (Now contains Battery) --- */
+        /* --- HEADER --- */
         .header {
             grid-column: 1 / -1;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Pushes Logo Left, Battery Right */
+            justify-content: space-between;
             border-bottom: 4px solid var(--primary);
             padding-bottom: 20px;
             margin-bottom: 10px;
             gap: 20px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo-img {
-            max-height: 70px;
-            width: auto;
-            object-fit: contain;
-        }
-
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-img { max-height: 70px; width: auto; object-fit: contain; }
         .header-text h1 { margin: 0; color: var(--primary); font-size: 26pt; line-height: 1.1; }
         .header-text h3 { font-size: 10pt; color: #666; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* BATTERY WIDGET (Inside Header) */
+        /* BATTERY WIDGET */
         .header-right {
             background: var(--bg);
             padding: 15px 25px;
@@ -107,7 +98,6 @@
             min-width: 250px;
             text-align: center;
         }
-
         .range-container {
             display: flex;
             align-items: center;
@@ -156,7 +146,6 @@
             padding: 10px;
             font-family: inherit;
             border-radius: 4px;
-            min-height: 80px;
         }
         textarea:focus { border-color: var(--primary); outline: none; }
 
@@ -164,40 +153,43 @@
 
         /* Checklist */
         .symptom-check label { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            margin-bottom: 8px; 
-            cursor: pointer;
-            font-size: 1.05em;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 8px; cursor: pointer; font-size: 1.05em;
         }
         .symptom-check input { width: 18px; height: 18px; accent-color: var(--primary); }
 
-        /* Ladder Visual */
+        /* --- LADDER VISUAL (COMPACTED) --- */
         .ladder-visual {
             background: white;
             border: 1px solid #eee;
-            padding: 15px;
+            padding: 10px;
             border-radius: 6px;
             text-align: center;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 5px; /* Tighter gap */
+            flex-grow: 0; /* Stop it from growing too big */
         }
-        .zone { padding: 12px; border-radius: 4px; font-weight: bold; font-size: 0.9em; }
+        .zone { padding: 8px; border-radius: 4px; font-weight: bold; font-size: 0.85em; }
         .zone-green { background: #E0F2F1; color: #00695C; }
         .zone-red { background: #FFEBEE; color: #C62828; }
         .zone-black { background: #263238; color: #ECEFF1; position: relative; }
+        .arrow-spacer { font-size: 0.8em; color: #ccc; line-height: 1; }
         
         .you-are-here {
-            background: var(--alert);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-top: 8px;
-            display: inline-block;
+            background: var(--alert); color: white; padding: 2px 8px;
+            border-radius: 10px; font-size: 0.8em; margin-top: 4px; display: inline-block;
+        }
+
+        /* --- TEXT AREA EXPANSION --- */
+        .anchor-container {
+            flex-grow: 1; /* Allows this box to fill the rest of the column */
+            display: flex;
+            flex-direction: column;
+        }
+        .anchor-container textarea {
+            flex-grow: 1; /* Forces textarea to fill the container */
+            min-height: 150px; /* Guarantees it's big enough */
         }
 
         /* Permission Slip */
@@ -224,12 +216,10 @@
         /* --- PRINT STYLES --- */
         @media print {
             body { background: white; padding: 0; margin: 0; }
-            .web-controls { display: none; }
+            .web-controls { display: none !important; } /* Force hide buttons */
             .canvas-sheet {
-                width: 100%;
-                height: 100vh;
-                box-shadow: none;
-                padding: 15mm;
+                width: 100%; height: 100vh;
+                box-shadow: none; padding: 10mm;
                 border-radius: 0;
             }
             .section, textarea, .header-right { border: 1px solid #ccc; }
@@ -312,25 +302,21 @@
                 <p style="font-size: 0.9em; margin-bottom:0;">Where are you stuck?</p>
                 
                 <div class="ladder-visual">
-                    <div class="zone zone-green">
-                        VENTRAL VAGAL<br><span style="font-weight:normal; font-size:0.9em">Safe • Connected</span>
-                    </div>
-                    <div style="color: #ccc;">⬇⬆</div>
-                    <div class="zone zone-red">
-                        SYMPATHETIC<br><span style="font-weight:normal; font-size:0.9em">Fight • Flight • Anxious</span>
-                    </div>
-                    <div style="color: #ccc;">⬇⬆</div>
+                    <div class="zone zone-green">VENTRAL VAGAL (Safe)</div>
+                    <div class="arrow-spacer">⬇⬆</div>
+                    <div class="zone zone-red">SYMPATHETIC (Anxious)</div>
+                    <div class="arrow-spacer">⬇⬆</div>
                     <div class="zone zone-black">
-                        DORSAL VAGAL
-                        <br><span style="font-weight:normal; font-size:0.9em">Shutdown • Numb</span>
+                        DORSAL VAGAL (Shutdown)
                         <br>
                         <div class="you-are-here">✖ YOU ARE HERE</div>
                     </div>
                 </div>
 
-                <div>
-                    <label style="font-weight:bold; color:var(--primary);">Safety Anchor:</label>
-                    <textarea style="min-height: 50px;" placeholder="One sensory trigger (e.g. cold water, weighted blanket)..."></textarea>
+                <div class="anchor-container">
+                    <label style="font-weight:bold; color:var(--primary); margin-top: 10px;">Safety Anchor:</label>
+                    <p style="font-size: 0.85em; color: #666; margin: 5px 0;">Describe one sensory trigger (cold water, heavy blanket, silence) to use when you feel numb:</p>
+                    <textarea placeholder="Type here..."></textarea>
                 </div>
             </div>
         </div>
