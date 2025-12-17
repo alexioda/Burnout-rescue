@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Burnout Recovery Canvas</title>
+    <style>
+        :root {
+            --primary: #006D77;
+            --secondary: #83C5BE;
+            --bg: #F5FBFB;
+            --alert: #E29578;
+            --text: #2F3E46;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- WEB CONTROLS (Buttons) --- */
+        .web-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn-secondary { background-color: white; color: var(--primary); border: 2px solid var(--primary); }
+
+        .canvas-sheet {
+            width: 297mm; /* A4 Landscape */
+            height: 210mm;
+            background: white;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- HEADERS --- */
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        h1 { margin: 0; color: var(--primary); font-size: 24pt; }
+        h2 { margin: 0 0 10px 0; color: var(--primary); font-size: 14pt; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { font-size: 10pt; color: #666; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- SECTIONS --- */
+        .section {
+            border: 1px solid #ddd;
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-line {
+            border: none;
+            border-bottom: 1px dashed #999;
+            background: transparent;
+            width: 100%;
+            margin-top: 5px;
+            font-family: monospace;
+            font-size: 11pt;
+        }
+
+        textarea {
+            width: 100%;
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            background: white;
+            resize: none;
+            margin-top: 5px;
+            font-family: monospace;
+            padding: 5px;
+        }
+
+        /* --- COLUMN 1: DIAGNOSIS --- */
+        .col-1 { display: flex; flex-direction: column; gap: 15px; }
+        
+        .symptom-check label { display: block; font-size: 0.9em; margin-bottom: 4px; cursor: pointer; }
+        .battery-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+
+        /* --- COLUMN 2: NERVOUS SYSTEM --- */
+        .col-2 { display: flex; flex-direction: column; gap: 15px; }
+        
+        .ladder-visual {
+            flex-grow: 1;
+            background: white;
+            border: 1px solid #eee;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            text-align: center;
+        }
+        .zone { padding: 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .zone-green { background: #dff2f0; color: #006D77; }
+        .zone-red { background: #fcece8; color: #A85740; }
+        .zone-black { background: #eeeeee; color: #555; }
+
+        /* --- COLUMN 3: PROTOCOL --- */
+        .col-3 { display: flex; flex-direction: column; gap: 15px; }
+        
+        .permission-box {
+            border: 2px dashed var(--alert);
+            background: #fff;
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .canvas-sheet { box-shadow: none; width: 100%; height: 100vh; }
+            .web-controls { display: none; }
+            textarea { border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="web-controls">
+        <button class="btn" onclick="window.print()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7"></path>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2-2v5a2 2 0 0 1-2 2h-2"></path>
+                <path d="M6 14h12v8H6z"></path>
+            </svg>
+            Print Canvas
+        </button>
+        <a href="workbook.html" class="btn btn-secondary">
+            📖 Open Full Workbook
+        </a>
+    </div>
+
+    <div class="canvas-sheet">
+        <div class="header">
+            <div>
+                <h3>Conscious Growth Coaching</h3>
+                <h1>The Burnout Rescue Canvas</h1>
+            </div>
+            <div style="text-align: right;">
+                <h3>Current Charge</h3>
+                <div class="battery-container">
+                    <span style="font-size:0.8em">Empty</span>
+                    <input type="range" style="width: 150px;">
+                    <span style="font-size:0.8em">Full</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-1">
+            <div class="section" style="flex: 1;">
+                <h2>1. The Symptoms</h2>
+                <p style="font-size: 0.9em; color: #666;">Check what applies:</p>
+                <div class="symptom-check">
+                    <label><input type="checkbox"> Numbness / "Fog"</label>
+                    <label><input type="checkbox"> Losing empathy/caring</label>
+                    <label><input type="checkbox"> Dread of work</label>
+                    <label><input type="checkbox"> Physical exhaustion</label>
+                </div>
+                <p style="margin-top: 15px; font-weight: bold; font-size: 0.9em;">Primary Drain:</p>
+                <textarea placeholder="What is the #1 thing draining your battery right now?"></textarea>
+            </div>
+            
+            <div class="section" style="flex: 0.5; border-color: var(--alert); background: #fff5f2;">
+                <h2>⚠️ The Trap</h2>
+                <p style="font-size: 0.85em;">I acknowledge that I cannot "work" my way out of this. The only way out is through rest.</p>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="section" style="height: 100%;">
+                <h2>2. My Nervous System</h2>
+                <p style="font-size: 0.9em;">Where are you stuck?</p>
+                
+                <div class="ladder-visual">
+                    <div class="zone zone-green">
+                        VENTRAL VAGAL<br>Safe • Social • Connected
+                    </div>
+                    
+                    <div style="font-size: 1.5em; color: #ccc;">⬆⬇</div>
+                    
+                    <div class="zone zone-red">
+                        SYMPATHETIC<br>Fight • Flight • Anxiety
+                    </div>
+                    
+                    <div style="font-size: 1.5em; color: #ccc;">⬆⬇</div>
+                    
+                    <div class="zone zone-black">
+                        DORSAL VAGAL (Burnout)<br>Shutdown • Numb • Collapse
+                        <div style="margin-top: 5px; color: var(--alert);">✖ YOU ARE HERE</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <p style="font-size: 0.9em; font-weight: bold;">Regulation Trigger:</p>
+                    <textarea style="height: 40px;" placeholder="My one sensory safety anchor (e.g. weighted blanket, cold water)..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="section" style="flex: 1;">
+                <h2>3. The Shelter (No List)</h2>
+                <p style="font-size: 0.9em;">3 things I will drop this week:</p>
+                <div style="margin-top: 5px;">
+                    <input class="input-line" type="text" placeholder="1. Work Boundary">
+                    <input class="input-line" type="text" placeholder="2. Social Boundary">
+                    <input class="input-line" type="text" placeholder="3. Internal/Self Boundary">
+                </div>
+            </div>
+
+            <div class="section" style="flex: 1;">
+                <h2>4. Restoration Menu</h2>
+                <p style="font-size: 0.9em;">Micro-doses of safety (Pick 1 daily):</p>
+                <ul style="font-size: 0.85em; padding-left: 20px; margin: 5px 0; line-height: 1.6;">
+                    <li>Look at the sky (2 mins)</li>
+                    <li>Drink water slowly</li>
+                    <li>No phone for 30 mins</li>
+                </ul>
+                <div style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px;">
+                    <span style="font-size: 0.8em; font-weight: bold;">I commit to:</span>
+                    <input class="input-line" type="text">
+                </div>
+            </div>
+
+            <div class="permission-box">
+                <strong>PERMISSION SLIP</strong><br>
+                "I give myself permission to be unproductive."<br>
+                <br>
+                Signed: <span style="font-family: 'Courier New'; text-decoration: underline;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>Date: _______________</div>
+            <div>Review Date: _______________</div>
+            <div>© Conscious Growth Coaching</div>
+        </div>
+    </div>
+</body>
+</html>
