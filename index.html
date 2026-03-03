@@ -16,12 +16,80 @@ body {
 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 background: #e2e8f0;
 margin: 0;
-padding: 40px 20px;
+padding: 0;
 display: flex;
 justify-content: center;
 color: var(--text);
-padding-bottom: 120px; 
+min-height: 100vh;
 }
+
+/* --- THE ENTERPRISE LOCK SCREEN --- */
+#lock-screen {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: #020617; /* Very dark slate */
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 100000;
+transition: opacity 0.5s ease;
+}
+.lock-box {
+background: #0f172a;
+border: 1px solid #1e293b;
+padding: 40px;
+border-radius: 12px;
+text-align: center;
+box-shadow: 0 20px 40px rgba(20, 184, 166, 0.1);
+max-width: 400px;
+width: 90%;
+}
+.lock-box h2 { color: white; margin-bottom: 10px; font-size: 20px; border: none; padding: 0; }
+.lock-box p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
+.lock-input {
+width: 100%;
+padding: 12px;
+background: #020617;
+border: 1px solid #334155;
+color: white;
+border-radius: 6px;
+margin-bottom: 15px;
+text-align: center;
+letter-spacing: 2px;
+font-family: monospace;
+font-size: 16px;
+box-sizing: border-box;
+}
+.lock-input:focus { outline: none; border-color: var(--secondary); }
+.lock-btn {
+width: 100%;
+background: var(--secondary);
+color: #020617;
+font-weight: bold;
+border: none;
+padding: 12px;
+border-radius: 6px;
+cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 12px;
+transition: all 0.2s;
+}
+.lock-btn:hover { background: #0d9488; color: white; }
+.error-msg { color: var(--alert); font-size: 12px; margin-top: 10px; display: none; }
+
+/* --- MAIN CONTENT (HIDDEN BY DEFAULT) --- */
+#main-content {
+display: none;
+width: 100%;
+padding: 40px 20px 120px 20px;
+box-sizing: border-box;
+justify-content: center;
+animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 /* --- WEB CONTROLS --- */
 .web-controls {
 position: fixed;
@@ -53,6 +121,7 @@ transition: transform 0.2s;
 }
 .btn:hover { transform: translateY(-2px); }
 .btn-secondary { background-color: #f0f0f0; color: var(--primary); border: 2px solid var(--primary); }
+
 /* --- CANVAS SHEET --- */
 .canvas-sheet {
 width: 100%;
@@ -65,7 +134,9 @@ display: grid;
 grid-template-columns: 1fr 1fr 1fr;
 grid-template-rows: auto 1fr auto;
 gap: 30px;
+margin: 0 auto;
 }
+
 /* --- HEADER --- */
 .header {
 grid-column: 1 / -1;
@@ -81,6 +152,7 @@ gap: 20px;
 .logo-text { font-weight: 800; font-size: 14pt; color: var(--secondary); letter-spacing: 2px; text-transform: uppercase; }
 .header-text h1 { margin: 0; color: var(--primary); font-size: 26pt; line-height: 1.1; }
 .header-text h3 { font-size: 10pt; color: #666; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+
 /* BATTERY WIDGET */
 .header-right {
 background: var(--bg);
@@ -99,6 +171,7 @@ color: #555;
 font-size: 0.9em;
 }
 input[type=range] { width: 100%; cursor: pointer; accent-color: var(--secondary); }
+
 /* --- SECTIONS --- */
 h2 {
 margin: 0 0 15px 0;
@@ -134,15 +207,18 @@ resize: none;
 padding: 10px;
 font-family: inherit;
 border-radius: 4px;
+box-sizing: border-box;
 }
 textarea:focus { border-color: var(--secondary); outline: none; }
 .col { display: flex; flex-direction: column; gap: 20px; }
+
 /* Checklist */
 .symptom-check label {
 display: flex; align-items: center; gap: 10px;
 margin-bottom: 8px; cursor: pointer; font-size: 1.05em;
 }
 .symptom-check input { width: 18px; height: 18px; accent-color: var(--secondary); }
+
 /* --- LADDER VISUAL --- */
 .ladder-visual {
 background: white;
@@ -164,6 +240,7 @@ flex-grow: 0;
 background: var(--alert); color: white; padding: 2px 8px;
 border-radius: 10px; font-size: 0.8em; margin-top: 4px; display: inline-block;
 }
+
 /* Permission Slip */
 .permission-box {
 border: 2px dashed var(--alert);
@@ -173,6 +250,7 @@ text-align: center;
 font-family: 'Courier New', Courier, monospace;
 margin-top: auto;
 }
+
 /* --- FOOTER --- */
 .footer {
 grid-column: 1 / -1;
@@ -183,9 +261,12 @@ border-top: 1px solid #eee;
 padding-top: 15px;
 font-size: 0.9em;
 }
+
 /* --- PRINT STYLES --- */
 @media print {
 body { background: white; padding: 0; margin: 0; }
+#lock-screen { display: none !important; }
+#main-content { display: flex !important; padding: 0; }
 .web-controls { display: none !important; } 
 .canvas-sheet { width: 100%; height: 100vh; box-shadow: none; padding: 10mm; border-radius: 0; }
 .section, textarea, .header-right { border: 1px solid #ccc; }
@@ -199,100 +280,155 @@ body { background: white; padding: 0; margin: 0; }
 </style>
 </head>
 <body>
-<div class="web-controls">
-<button class="btn" onclick="window.print()">Print Canvas</button>
-<a href="rescue-workbook.html" class="btn btn-secondary">Full Workbook</a>
+
+<!-- THE CIPHER GATE -->
+<div id="lock-screen">
+    <div class="lock-box">
+        <div style="color: var(--secondary); font-size: 24px; margin-bottom: 15px;">🛡️</div>
+        <h2>Encrypted Clinical Asset</h2>
+        <p>This protocol is restricted to verified clients. Please enter your enterprise cipher.</p>
+        <input type="password" id="cipher-input" class="lock-input" placeholder="Enter Cipher">
+        <button onclick="checkCipher()" class="lock-btn">Unlock Protocol</button>
+        <div id="error-text" class="error-msg">INVALID CIPHER. ACCESS DENIED.</div>
+    </div>
 </div>
 
-<div class="canvas-sheet">
-<div class="header">
-<div class="header-left">
-<div class="logo-text">LiveAdaptiv</div>
-<div class="header-text">
-<h1>The Burnout Rescue Canvas</h1>
-<h3>Immediate Autonomic Triage</h3>
-</div>
-</div>
-<div class="header-right">
-<div style="margin-bottom: 8px;">My Current Battery Level</div>
-<div class="range-container">
-<span>0%</span>
-<input type="range" min="0" max="100" value="30">
-<span>100%</span>
-</div>
-</div>
+<div id="main-content">
+    <div class="web-controls">
+    <button class="btn" onclick="window.print()">Print Canvas</button>
+    <a href="rescue-workbook.html" class="btn btn-secondary">Full Workbook</a>
+    </div>
+
+    <div class="canvas-sheet">
+    <div class="header">
+    <div class="header-left">
+    <div class="logo-text">LiveAdaptiv</div>
+    <div class="header-text">
+    <h1>The Burnout Rescue Canvas</h1>
+    <h3>Immediate Autonomic Triage</h3>
+    </div>
+    </div>
+    <div class="header-right">
+    <div style="margin-bottom: 8px;">My Current Battery Level</div>
+    <div class="range-container">
+    <span>0%</span>
+    <input type="range" min="0" max="100" value="30">
+    <span>100%</span>
+    </div>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="section">
+    <h2>1. Symptom Audit</h2>
+    <div class="symptom-check">
+    <label><input type="checkbox"> Cynicism towards patients/clients</label>
+    <label><input type="checkbox"> Emotional numbness</label>
+    <label><input type="checkbox"> Chronic dread before shifts</label>
+    <label><input type="checkbox"> Disrupted sleep architecture</label>
+    <label><input type="checkbox"> Internalizing system failures</label>
+    </div>
+    </div>
+    <div class="section">
+    <h2>2. The Polyvagal Ladder</h2>
+    <div class="ladder-visual">
+    <div class="zone zone-green">VENTRAL VAGAL (Safe & Social)</div>
+    <div class="arrow-spacer">▼</div>
+    <div class="zone zone-red">SYMPATHETIC (Fight or Flight)</div>
+    <div class="arrow-spacer">▼</div>
+    <div class="zone zone-black">DORSAL VAGAL (Shutdown / Burnout)
+    <br><span class="you-are-here">YOU ARE LIKELY HERE</span>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="section">
+    <h2>3. Cognitive Defusion</h2>
+    <p style="font-size:0.9em; color:#555; margin-top:0;">Separate the clinical reality from the fiction your brain is telling you.</p>
+    <label style="font-size:0.85em; font-weight:bold;">The Fiction (The Loop):</label>
+    <textarea rows="3" placeholder="e.g., I am failing my team..."></textarea>
+    <label style="font-size:0.85em; font-weight:bold; margin-top:10px;">The Clinical Reality:</label>
+    <textarea rows="3" placeholder="e.g., I am operating within an under-resourced system..."></textarea>
+    </div>
+    <div class="section" style="flex-grow:1;">
+    <h2>4. Permission Slip</h2>
+    <div class="permission-box">
+    <strong>OFFICIAL PERMISSION</strong><br><br>
+    I hereby give myself permission to prioritize biological safety over productivity for the next 48 hours. I will not "hack" my exhaustion.<br><br>
+    _____________________<br>
+    <span style="font-size:10px;">Signature</span>
+    </div>
+    </div>
+    </div>
+
+    <div class="col">
+    <div class="section">
+    <h2>5. Boundary Architecture</h2>
+    <p style="font-size:0.9em; color:#555; margin-top:0;">Establish three hard boundaries to stop the autonomic bleed.</p>
+    <input type="text" class="input-line" placeholder="1. Professional (e.g., No charting at home)">
+    <input type="text" class="input-line" placeholder="2. Social (e.g., Decline weekend obligations)">
+    <input type="text" class="input-line" placeholder="3. Internal (e.g., Stop doomscrolling)">
+    </div>
+    <div class="section" style="flex-grow:1;">
+    <h2>6. Restoration Plan</h2>
+    <p style="font-size:0.9em; color:#555; margin-top:0;">Select one micro-dose of safety to execute today.</p>
+    <div class="symptom-check">
+    <label><input type="checkbox"> 90-Second Physiological Sigh</label>
+    <label><input type="checkbox"> 5 minutes of total silence</label>
+    <label><input type="checkbox"> Temperature regulation (cold water/hot shower)</label>
+    </div>
+    </div>
+    </div>
+
+    <div class="footer">
+    <span>LiveAdaptiv Clinical Systems</span>
+    <span>Strictly Confidential</span>
+    </div>
+    </div>
 </div>
 
-<div class="col">
-<div class="section">
-<h2>1. Symptom Audit</h2>
-<div class="symptom-check">
-<label><input type="checkbox"> Cynicism towards patients/clients</label>
-<label><input type="checkbox"> Emotional numbness</label>
-<label><input type="checkbox"> Chronic dread before shifts</label>
-<label><input type="checkbox"> Disrupted sleep architecture</label>
-<label><input type="checkbox"> Internalizing system failures</label>
-</div>
-</div>
-<div class="section">
-<h2>2. The Polyvagal Ladder</h2>
-<div class="ladder-visual">
-<div class="zone zone-green">VENTRAL VAGAL (Safe & Social)</div>
-<div class="arrow-spacer">▼</div>
-<div class="zone zone-red">SYMPATHETIC (Fight or Flight)</div>
-<div class="arrow-spacer">▼</div>
-<div class="zone zone-black">DORSAL VAGAL (Shutdown / Burnout)
-<br><span class="you-are-here">YOU ARE LIKELY HERE</span>
-</div>
-</div>
-</div>
-</div>
+<script>
+    // --- CIPHER SECURITY LOGIC ---
+    // Change "GENESIS2026" here if you want a different password
+    const MASTER_CIPHER = "GENESIS2026"; 
 
-<div class="col">
-<div class="section">
-<h2>3. Cognitive Defusion</h2>
-<p style="font-size:0.9em; color:#555; margin-top:0;">Separate the clinical reality from the fiction your brain is telling you.</p>
-<label style="font-size:0.85em; font-weight:bold;">The Fiction (The Loop):</label>
-<textarea rows="3" placeholder="e.g., I am failing my team..."></textarea>
-<label style="font-size:0.85em; font-weight:bold; margin-top:10px;">The Clinical Reality:</label>
-<textarea rows="3" placeholder="e.g., I am operating within an under-resourced system..."></textarea>
-</div>
-<div class="section" style="flex-grow:1;">
-<h2>4. Permission Slip</h2>
-<div class="permission-box">
-<strong>OFFICIAL PERMISSION</strong><br><br>
-I hereby give myself permission to prioritize biological safety over productivity for the next 48 hours. I will not "hack" my exhaustion.<br><br>
-_____________________<br>
-<span style="font-size:10px;">Signature</span>
-</div>
-</div>
-</div>
+    function checkCipher() {
+        const input = document.getElementById('cipher-input').value.trim().toUpperCase();
+        const errorMsg = document.getElementById('error-text');
+        
+        if (input === MASTER_CIPHER) {
+            // Unlock success
+            document.getElementById('lock-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('lock-screen').style.display = 'none';
+                const mainContent = document.getElementById('main-content');
+                mainContent.style.display = 'flex';
+                // Trigger reflow to restart animation safely
+                void mainContent.offsetWidth; 
+            }, 500);
+        } else {
+            // Unlock failed
+            errorMsg.style.display = 'block';
+            document.getElementById('cipher-input').value = '';
+            
+            // Add a little shake effect
+            const box = document.querySelector('.lock-box');
+            box.style.transform = 'translateX(-10px)';
+            setTimeout(() => box.style.transform = 'translateX(10px)', 100);
+            setTimeout(() => box.style.transform = 'translateX(-10px)', 200);
+            setTimeout(() => box.style.transform = 'translateX(0)', 300);
+        }
+    }
 
-<div class="col">
-<div class="section">
-<h2>5. Boundary Architecture</h2>
-<p style="font-size:0.9em; color:#555; margin-top:0;">Establish three hard boundaries to stop the autonomic bleed.</p>
-<input type="text" class="input-line" placeholder="1. Professional (e.g., No charting at home)">
-<input type="text" class="input-line" placeholder="2. Social (e.g., Decline weekend obligations)">
-<input type="text" class="input-line" placeholder="3. Internal (e.g., Stop doomscrolling)">
-</div>
-<div class="section" style="flex-grow:1;">
-<h2>6. Restoration Plan</h2>
-<p style="font-size:0.9em; color:#555; margin-top:0;">Select one micro-dose of safety to execute today.</p>
-<div class="symptom-check">
-<label><input type="checkbox"> 90-Second Physiological Sigh</label>
-<label><input type="checkbox"> 5 minutes of total silence</label>
-<label><input type="checkbox"> Temperature regulation (cold water/hot shower)</label>
-</div>
-</div>
-</div>
+    // Allow pressing "Enter" to unlock
+    document.getElementById('cipher-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkCipher();
+        }
+    });
+</script>
 
-<div class="footer">
-<span>LiveAdaptiv Clinical Systems</span>
-<span>Strictly Confidential</span>
-</div>
-</div>
 </body>
 </html>
-
-
