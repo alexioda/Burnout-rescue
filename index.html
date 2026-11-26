@@ -267,7 +267,7 @@ font-size: 0.9em;
 .further { grid-column: 1 / -1; border-top: 1px solid #eee; padding-top: 25px; }
 .further h2 { border: none; padding: 0; margin-bottom: 5px; }
 .further-lead { font-size: 0.9em; color: #555; margin: 0 0 15px 0; }
-.further-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.further-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .further-card { display: flex; flex-direction: column; gap: 4px; padding: 15px; background: var(--bg); border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: var(--text); transition: border-color 0.2s, transform 0.2s; }
 .further-card:hover { border-color: var(--secondary); transform: translateY(-2px); }
 .further-card:focus-visible { outline: 2px solid var(--secondary); outline-offset: 2px; }
@@ -275,7 +275,7 @@ font-size: 0.9em;
 .further-card-name { font-weight: bold; color: var(--primary); font-size: 1.05em; }
 .further-card-desc { font-size: 0.85em; color: #555; line-height: 1.4; }
 .further-card-url { font-size: 0.75em; color: #888; margin-top: auto; padding-top: 6px; }
-@media screen and (max-width: 1100px) { .further-grid { grid-template-columns: repeat(2, 1fr); } }
+@media screen and (max-width: 900px) { .further-grid { grid-template-columns: repeat(2, 1fr); } }
 @media screen and (max-width: 600px) { .further-grid { grid-template-columns: 1fr; } }
 
 /* --- PRINT STYLES --- */
@@ -403,6 +403,12 @@ body { background: white; padding: 0; margin: 0; }
     <h2>Keep Going</h2>
     <p class="further-lead">When the rescue work holds, these are the next steps.</p>
     <div class="further-grid">
+    <a class="further-card" href="https://blueprint.liveadaptiv.com" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">Start here</span>
+    <span class="further-card-name">Kinetic Blueprint</span>
+    <span class="further-card-desc">Free diagnostic. Find the pattern you run under pressure: Rusher, Fixer, or Freezer?</span>
+    <span class="further-card-url">blueprint.liveadaptiv.com</span>
+    </a>
     <a class="further-card" href="https://sovereign.liveadaptiv.com" target="_blank" rel="noopener noreferrer">
     <span class="further-card-tag">Daily practice</span>
     <span class="further-card-name">Sovereign Command Center</span>
