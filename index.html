@@ -296,7 +296,7 @@ body { background: white; padding: 0; margin: 0; }
 <div id="main-content">
     <div class="web-controls">
     <button class="btn" onclick="window.print()">Print Canvas</button>
-    <a href="rescue-workbook.html" class="btn btn-secondary">Full Workbook</a>
+    <a href="workbook.html" class="btn btn-secondary">Full Workbook</a>
     </div>
 
     <div class="canvas-sheet">
@@ -399,7 +399,9 @@ body { background: white; padding: 0; margin: 0; }
         const errorMsg = document.getElementById('error-text');
         
         if (input === MASTER_CIPHER) {
-            // Unlock success
+            // Unlock success. Remember it for this browser session so coming
+            // back from the workbook doesn't ask for the cipher again.
+            try { sessionStorage.setItem('la_rescue_unlocked', '1'); } catch (e) {}
             document.getElementById('lock-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('lock-screen').style.display = 'none';
@@ -421,6 +423,14 @@ body { background: white; padding: 0; margin: 0; }
             setTimeout(() => box.style.transform = 'translateX(0)', 300);
         }
     }
+
+    // Already unlocked earlier in this browser session: skip the lock screen.
+    try {
+        if (sessionStorage.getItem('la_rescue_unlocked') === '1') {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+        }
+    } catch (e) {}
 
     // Allow pressing "Enter" to unlock
     document.getElementById('cipher-input').addEventListener('keypress', function (e) {
