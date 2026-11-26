@@ -125,6 +125,7 @@ transition: transform 0.2s;
 /* --- CANVAS SHEET --- */
 .canvas-sheet {
 width: 100%;
+box-sizing: border-box;
 max-width: 1300px;
 background: white;
 padding: 40px;
@@ -262,10 +263,26 @@ padding-top: 15px;
 font-size: 0.9em;
 }
 
+/* --- FURTHER WORK --- */
+.further { grid-column: 1 / -1; border-top: 1px solid #eee; padding-top: 25px; }
+.further h2 { border: none; padding: 0; margin-bottom: 5px; }
+.further-lead { font-size: 0.9em; color: #555; margin: 0 0 15px 0; }
+.further-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.further-card { display: flex; flex-direction: column; gap: 4px; padding: 15px; background: var(--bg); border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: var(--text); transition: border-color 0.2s, transform 0.2s; }
+.further-card:hover { border-color: var(--secondary); transform: translateY(-2px); }
+.further-card:focus-visible { outline: 2px solid var(--secondary); outline-offset: 2px; }
+.further-card-tag { font-size: 0.7em; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; color: var(--secondary); }
+.further-card-name { font-weight: bold; color: var(--primary); font-size: 1.05em; }
+.further-card-desc { font-size: 0.85em; color: #555; line-height: 1.4; }
+.further-card-url { font-size: 0.75em; color: #888; margin-top: auto; padding-top: 6px; }
+@media screen and (max-width: 1100px) { .further-grid { grid-template-columns: repeat(2, 1fr); } }
+@media screen and (max-width: 600px) { .further-grid { grid-template-columns: 1fr; } }
+
 /* --- PRINT STYLES --- */
 @media print {
 body { background: white; padding: 0; margin: 0; }
 #lock-screen { display: none !important; }
+.further { display: none !important; }
 #main-content { display: flex !important; padding: 0; }
 .web-controls { display: none !important; } 
 .canvas-sheet { width: 100%; height: 100vh; box-shadow: none; padding: 10mm; border-radius: 0; }
@@ -379,6 +396,43 @@ body { background: white; padding: 0; margin: 0; }
     <label><input type="checkbox"> 5 minutes of total silence</label>
     <label><input type="checkbox"> Temperature regulation (cold water/hot shower)</label>
     </div>
+    </div>
+    </div>
+
+    <div class="further">
+    <h2>Keep Going</h2>
+    <p class="further-lead">When the rescue work holds, these are the next steps.</p>
+    <div class="further-grid">
+    <a class="further-card" href="https://sovereign.liveadaptiv.com" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">Daily practice</span>
+    <span class="further-card-name">Sovereign Command Center</span>
+    <span class="further-card-desc">Free daily card pulls and identity planner for acute friction.</span>
+    <span class="further-card-url">sovereign.liveadaptiv.com</span>
+    </a>
+    <a class="further-card" href="https://app.liveadaptiv.com" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">Daily practice</span>
+    <span class="further-card-name">Adaptiv App</span>
+    <span class="further-card-desc">Somatic regulation and kinetic tracking. First cycle free.</span>
+    <span class="further-card-url">app.liveadaptiv.com</span>
+    </a>
+    <a class="further-card" href="https://liveadaptiv.lemonsqueezy.com/checkout/buy/d29e3b81-78a4-4611-83f8-11fe76d9d82e" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">Go deeper</span>
+    <span class="further-card-name">Stress Transformation Workbook</span>
+    <span class="further-card-desc">Ten chapters, from physiology and breath to an integration protocol.</span>
+    <span class="further-card-url">liveadaptiv.com</span>
+    </a>
+    <a class="further-card" href="https://liveadaptiv.lemonsqueezy.com/checkout/buy/670a3228-4463-41a4-8520-54bddffcf5d1" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">Go deeper</span>
+    <span class="further-card-name">Alchemist Field Guide</span>
+    <span class="further-card-desc">Seven guided cycles of shadow work and identity.</span>
+    <span class="further-card-url">liveadaptiv.com</span>
+    </a>
+    <a class="further-card" href="https://www.liveadaptiv.com/metabolize" target="_blank" rel="noopener noreferrer">
+    <span class="further-card-tag">The foundation</span>
+    <span class="further-card-name">Metabolize</span>
+    <span class="further-card-desc">The book. The argument the whole framework is built on.</span>
+    <span class="further-card-url">liveadaptiv.com/metabolize</span>
+    </a>
     </div>
     </div>
 
